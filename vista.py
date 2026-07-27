@@ -36,6 +36,9 @@ class ProductoView(tk.Tk):
         self.btn_guardar = ttk.Button(frame_btn, text="Guardar Producto", command=self.on_guardar)
         self.btn_guardar.pack(side="left", padx=5)
 
+        self.btn_consultar = ttk.Button(frame_btn, text="Consultar Inventario", command=self.on_consultar)
+        self.btn_consultar.pack(side="left", padx=5)
+
         self.btn_eliminar = ttk.Button(frame_btn, text="Eliminar Seleccionado", command=self.on_eliminar)
         self.btn_eliminar.pack(side="left", padx=5)
 
@@ -43,8 +46,12 @@ class ProductoView(tk.Tk):
         frame_tabla = ttk.LabelFrame(self, text=" Inventario ", padding=10)
         frame_tabla.pack(fill="both", expand=True, padx=10, pady=5)
 
-        self.tabla = ttk.Treeview(frame_tabla, columns=("ID", "Código", "Nombre", "Precio", "Stock"), show="headings")
-        for col in ("ID", "Código", "Nombre", "Precio", "Stock"):
+        self.tabla = ttk.Treeview(
+            frame_tabla, 
+            columns=("ID", "Código", "Nombre", "Precio", "Stock", "Categoría"), 
+            show="headings"
+        )
+        for col in ("ID", "Código", "Nombre", "Precio", "Stock", "Categoría"):
             self.tabla.heading(col, text=col)
             self.tabla.column(col, width=100)
         self.tabla.pack(fill="both", expand=True)
@@ -56,6 +63,10 @@ class ProductoView(tk.Tk):
         if self.controller:
             self.controller.guardar_producto()
 
+    def on_consultar(self):
+        if self.controller:
+            self.controller.consultar_productos()
+
     def on_eliminar(self):
         if self.controller:
             self.controller.eliminar_producto()
@@ -65,7 +76,20 @@ class ProductoView(tk.Tk):
             self.tabla.delete(row)
         for item in lista:
             precio_formateado = f"${item['precio']:.2f}"
-            self.tabla.insert("", "end", values=(item["id"], item["codigo"], item["nombre"], precio_formateado, item["stock"]))
+            categoria_nombre = item['categoria'] if item['categoria'] else "Sin categoría"
+            
+            self.tabla.insert(
+                "", 
+                "end", 
+                values=(
+                    item["id"], 
+                    item["codigo"], 
+                    item["nombre"], 
+                    precio_formateado, 
+                    item["stock"], 
+                    categoria_nombre
+                )
+            )
 
     def limpiar_formulario(self):
         self.txt_codigo.delete(0, tk.END)
