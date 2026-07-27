@@ -12,6 +12,10 @@ class ProductoController:
         productos = self.model.obtener_productos()
         self.view.mostrar_productos(productos)
 
+    def consultar_productos(self):
+        self.cargar_tabla()
+        messagebox.showinfo("Actualizado", "Inventario consultado correctamente")
+
     def guardar_producto(self):
         codigo = self.view.txt_codigo.get().strip()
         nombre = self.view.txt_nombre.get().strip()
@@ -51,4 +55,5 @@ class ProductoController:
                 messagebox.showinfo("Éxito", "Producto eliminado correctamente")
                 self.cargar_tabla()
             else:
+                messagebox.showerror("Error", "No se pudo eliminar el registro")
                 messagebox.showerror("Error", "No se pudo eliminar el registro")
